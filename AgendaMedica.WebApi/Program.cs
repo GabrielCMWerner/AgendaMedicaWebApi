@@ -15,7 +15,7 @@ namespace AgendaMedica.WebApi
 
             builder.Services.Configure<ApiBehaviorOptions>(config =>
             {
-                config.SuppressModelStateInvalidFilter = true;
+                config.SuppressModelStateInvalidFilter = false;
             });
 
             builder.Services.AddSwaggerGen(c =>
@@ -31,6 +31,10 @@ namespace AgendaMedica.WebApi
             builder.Services.ConfigurarAutoMapper();
             builder.Services.ConfigurarInjecaoDependencia(builder.Configuration);
             builder.Services.ConfigurarSwagger();
+            builder.Services.AddCors(opt =>
+            {
+                opt.AddPolicy("Desenvolvimento", servicos => servicos.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
 
             builder.Services.ConfigurarControllers();
 
@@ -44,6 +48,8 @@ namespace AgendaMedica.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("Desenvolvimento");
 
             app.UseHttpsRedirection();
 
