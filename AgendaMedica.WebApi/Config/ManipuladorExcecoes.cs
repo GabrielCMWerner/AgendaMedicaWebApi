@@ -25,11 +25,11 @@ namespace AgendaMedica.WebApi.Config
                 var problema = new
                 {
                     Sucesso = false,
-                    Erros = new List<string> 
-                        { "Nossa aplicação está com alguns problemas, tente novamente mais tarde" }
+                    Erros = new List<string>
+                        { ex.Message }
                 };
 
-                ctx.Response.WriteAsync(JsonSerializer.Serialize(problema)); 
+                ctx.Response.WriteAsync(JsonSerializer.Serialize(problema));
             }
         }
     }

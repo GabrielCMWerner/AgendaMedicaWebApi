@@ -89,4 +89,3 @@ namespace AgendaMedica.Aplicacao.ModuloConsulta
         }
     }
 }
-

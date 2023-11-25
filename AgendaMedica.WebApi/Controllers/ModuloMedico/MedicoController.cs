@@ -101,3 +101,4 @@ namespace AgendaMedica.WebApi.Controllers.ModuloMedico
         }
     }
 }
+
