@@ -1,22 +1,47 @@
 ﻿using AgendaMedica.Dominio.Compartilhado;
 using AgendaMedica.Dominio.ModuloCirurgia;
+using AgendaMedica.Dominio.ModuloConsulta;
+using AgendaMedica.Dominio.ModuloMedico;
 using FluentResults;
 
 namespace AgendaMedica.Aplicacao.ModuloCirurgia
 {
     public class ServicoCirurgia
     {
-        private readonly IRepositorioCirurgia repositorioCirurgia;
-        private readonly IContextoPersistencia contextoPersistencia;
 
-        public ServicoCirurgia(IRepositorioCirurgia repositorioCirurgia, IContextoPersistencia contextoPersistencia)
+
+        private IRepositorioCirurgia repositorioCirurgia;
+        private IRepositorioConsulta repositorioConsulta;
+        private IContextoPersistencia contextoPersistencia;
+
+        public ServicoCirurgia(
+            IRepositorioCirurgia repositorioCirurgia,
+            IRepositorioConsulta repositorioConsulta,
+            IContextoPersistencia contexto)
         {
             this.repositorioCirurgia = repositorioCirurgia;
-            this.contextoPersistencia = contextoPersistencia;
+            this.repositorioConsulta = repositorioConsulta;
+            this.contextoPersistencia = contexto;
         }
 
         public async Task<Result<Cirurgia>> InserirAsync(Cirurgia cirurgia)
         {
+            TimeSpan periodoDescanso = TimeSpan.FromHours(4);
+
+            cirurgia.HoraTermino += periodoDescanso;
+
+            var medicosIds = cirurgia.Medicos.Select(m => m.Id).ToList();
+
+            foreach (var medicoId in medicosIds)
+            {
+                var JaExisteConsulta = await repositorioConsulta.ExisteConsultaNesseHorarioPorMedicoId(medicoId, cirurgia.HoraInicio, cirurgia.HoraTermino, cirurgia.Data);
+
+                var JaExisteCirurgia = await repositorioCirurgia.ExisteCirurgiasNesseHorarioPorMedicoId(medicoId, cirurgia.HoraInicio, cirurgia.HoraTermino, cirurgia.Data);
+
+                if (JaExisteConsulta || JaExisteCirurgia)
+                    return Result.Fail("Horário indísponivel");
+            }
+
             var resultadoValidacao = ValidarCirurgia(cirurgia);
 
             if (resultadoValidacao.IsFailed)
@@ -27,6 +52,8 @@ namespace AgendaMedica.Aplicacao.ModuloCirurgia
             await contextoPersistencia.GravarAsync();
 
             return Result.Ok(cirurgia);
+
+
         }
 
         public async Task<Result<Cirurgia>> EditarAsync(Cirurgia cirurgia)
@@ -87,5 +114,7 @@ namespace AgendaMedica.Aplicacao.ModuloCirurgia
 
             return Result.Ok();
         }
+
+        
     }
 }

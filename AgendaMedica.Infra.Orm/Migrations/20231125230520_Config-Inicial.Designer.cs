@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgendaMedica.Infra.Orm.Migrations
 {
     [DbContext(typeof(eAgendaMedicaDbContext))]
-    [Migration("20231122223902_Config-Inicial")]
+    [Migration("20231125230520_Config-Inicial")]
     partial class ConfigInicial
     {
         /// <inheritdoc />
@@ -29,6 +29,9 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Data")
+                        .HasColumnType("datetime2");
 
                     b.Property<TimeSpan>("HoraInicio")
                         .HasColumnType("time");
@@ -49,6 +52,9 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Data")
+                        .HasColumnType("datetime2");
 
                     b.Property<TimeSpan>("HoraInicio")
                         .HasColumnType("time");
@@ -79,8 +85,7 @@ namespace AgendaMedica.Infra.Orm.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Disponibilidade")
-                        .IsRequired()
+                    b.Property<bool>("Disponibilidade")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -103,12 +108,12 @@ namespace AgendaMedica.Infra.Orm.Migrations
                     b.Property<Guid>("CirurgiasId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ListaMedicosId")
+                    b.Property<Guid>("MedicosId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("CirurgiasId", "ListaMedicosId");
+                    b.HasKey("CirurgiasId", "MedicosId");
 
-                    b.HasIndex("ListaMedicosId");
+                    b.HasIndex("MedicosId");
 
                     b.ToTable("TBMedico_TBCirurgia", (string)null);
                 });
@@ -135,7 +140,7 @@ namespace AgendaMedica.Infra.Orm.Migrations
 
                     b.HasOne("AgendaMedica.Dominio.ModuloMedico.Medico", null)
                         .WithMany()
-                        .HasForeignKey("ListaMedicosId")
+                        .HasForeignKey("MedicosId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

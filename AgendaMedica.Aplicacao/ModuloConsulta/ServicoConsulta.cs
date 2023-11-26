@@ -1,4 +1,5 @@
 ﻿using AgendaMedica.Dominio.Compartilhado;
+using AgendaMedica.Dominio.ModuloCirurgia;
 using AgendaMedica.Dominio.ModuloConsulta;
 using FluentResults;
 
@@ -6,17 +7,40 @@ namespace AgendaMedica.Aplicacao.ModuloConsulta
 {
     public class ServicoConsulta
     {
-        private readonly IRepositorioConsulta repositorioConsulta;
-        private readonly IContextoPersistencia contextoPersistencia;
+        private IRepositorioConsulta repositorioConsulta;
+        private IRepositorioCirurgia repositorioCirurgia;
+        private IContextoPersistencia contextoPersistencia;
 
-        public ServicoConsulta(IRepositorioConsulta repositorioConsulta, IContextoPersistencia contextoPersistencia)
+        public ServicoConsulta(
+            IRepositorioConsulta repositorioConsulta,
+            IRepositorioCirurgia repositorioCirurgia,
+            IContextoPersistencia contexto)
         {
             this.repositorioConsulta = repositorioConsulta;
-            this.contextoPersistencia = contextoPersistencia;
+            this.repositorioCirurgia = repositorioCirurgia;
+            this.contextoPersistencia = contexto;
         }
 
         public async Task<Result<Consulta>> InserirAsync(Consulta consulta)
         {
+            TimeSpan periodoDescanso = TimeSpan.FromMinutes(20);
+
+            consulta.HoraTermino += periodoDescanso;
+
+            var JaExisteConsulta = await repositorioConsulta.ExisteConsultaNesseHorarioPorMedicoId(consulta.MedicoId, consulta.HoraInicio, consulta.HoraTermino, consulta.Data);
+
+            var JaExisteCirurgia = await repositorioCirurgia.ExisteCirurgiasNesseHorarioPorMedicoId(consulta.MedicoId, consulta.HoraInicio, consulta.HoraTermino, consulta.Data);
+
+            if (JaExisteConsulta || JaExisteCirurgia)
+                return Result.Fail("Horário indísponivel");
+
+            var existe = await repositorioConsulta.ExisteConsultaNesseHorarioPorMedicoId(consulta);
+
+            //var existe2 = await repositorioCirurgia.ExisteCirurgiasNesseHorarioPorMedicoId(consulta.MedicoId);
+
+            if (existe)
+                return Result.Fail("Horário indísponivel");
+
             var resultadoValidacao = ValidarConsulta(consulta);
 
             if (resultadoValidacao.IsFailed)
@@ -31,6 +55,7 @@ namespace AgendaMedica.Aplicacao.ModuloConsulta
 
         public async Task<Result<Consulta>> EditarAsync(Consulta consulta)
         {
+
             var resultadoValidacao = ValidarConsulta(consulta);
 
             if (resultadoValidacao.IsFailed)

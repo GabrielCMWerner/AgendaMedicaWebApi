@@ -7,17 +7,17 @@ namespace AgendaMedica.Dominio.ModuloCirurgia
         public ValidadorCirurgia()
         {
             RuleFor(x => x.Titulo)
-                    .NotNull().NotEmpty();
+                .NotNull().NotEmpty();
 
             RuleFor(x => x.HoraInicio)
-                    .NotNull().NotEmpty();
+                .NotNull().NotEmpty();
 
             RuleFor(x => x.HoraTermino)
-                    .NotNull().NotEmpty();
+                .NotNull().NotEmpty();
 
-            RuleFor(x => x.ListaMedicos)
-                .NotNull().NotEmpty().WithMessage("A cirurgia deve ter pelo menos um médico.")
-                .Must(medicos => medicos != null && medicos.Count > 0).WithMessage("A cirurgia deve ter pelo menos um médico.");
+            RuleFor(x => x.Titulo)
+                .MinimumLength(3)
+                .WithMessage("O título da consulta deve ter no mínimo 3 caracteres.");
         }
     }
 }

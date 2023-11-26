@@ -7,7 +7,9 @@ namespace AgendaMedica.Dominio.ModuloCirurgia
     {
         public string Titulo { get; set; }
 
-        public List<Medico> ListaMedicos { get; set; }
+        public DateTime Data { get; set; }
+
+        public List<Medico> Medicos { get; set; }
 
         public TimeSpan HoraInicio { get; set; }
 
@@ -15,22 +17,22 @@ namespace AgendaMedica.Dominio.ModuloCirurgia
 
         public Cirurgia()
         {
-            ListaMedicos = new List<Medico>();
+            Medicos = new List<Medico>();
         }
 
         public Cirurgia(string titulo, List<Medico> listaMedicos, TimeSpan horaInicio)
         {
             Titulo = titulo;
-            ListaMedicos = listaMedicos;
+            Medicos = listaMedicos;
             HoraInicio = horaInicio;
         }
 
         public bool AdicionarMedico(Medico medico)
         {
-            if (ListaMedicos.Exists(x => x.Equals(medico)) == false)
+            if (Medicos.Exists(x => x.Equals(medico)) == false)
             {
                 medico.Cirurgias.Add(this);
-                ListaMedicos.Add(medico);
+                Medicos.Add(medico);
 
                 return true;
             }
@@ -40,9 +42,9 @@ namespace AgendaMedica.Dominio.ModuloCirurgia
 
         public void RemoverMedico(Guid medicoId)
         {
-            var medicoCirurgia = ListaMedicos.Find(x => x.Id.Equals(medicoId));
+            var medicoCirurgia = Medicos.Find(x => x.Id.Equals(medicoId));
 
-            ListaMedicos.Remove(medicoCirurgia);
+            Medicos.Remove(medicoCirurgia);
         }
     }
 }

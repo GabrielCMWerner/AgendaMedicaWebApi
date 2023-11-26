@@ -16,6 +16,9 @@ namespace AgendaMedica.Infra.Orm.ModuloConsulta
             builder.Property(x => x.Titulo)
                 .IsRequired();
 
+            builder.Property(x => x.Data)
+                .IsRequired();
+
             builder.Property(x => x.HoraInicio)
                 .IsRequired();
 

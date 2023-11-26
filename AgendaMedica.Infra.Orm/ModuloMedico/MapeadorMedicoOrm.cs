@@ -28,7 +28,7 @@ namespace AgendaMedica.Infra.Orm.ModuloMedico
 
 
             builder.HasMany(x => x.Cirurgias)
-                .WithMany(x => x.ListaMedicos)
+                .WithMany(x => x.Medicos)
                 .UsingEntity(x => x.ToTable("TBMedico_TBCirurgia"));
         }
 

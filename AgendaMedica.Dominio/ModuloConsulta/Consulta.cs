@@ -8,6 +8,8 @@ namespace AgendaMedica.Dominio.ModuloConsulta
 
         public string Titulo { get; set; }
 
+        public DateTime Data { get; set; }
+
         public Medico Medico { get; set; }
 
         public Guid MedicoId { get; set; }

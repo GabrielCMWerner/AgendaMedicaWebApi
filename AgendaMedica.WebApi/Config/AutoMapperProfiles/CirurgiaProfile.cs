@@ -20,12 +20,12 @@ namespace AgendaMedica.WebApi.Config.AutoMapperProfiles
             CreateMap<FormsCirurgiaViewModel, Cirurgia>()
                 .ForMember(destino => destino.HoraInicio, opt => opt.MapFrom(origem => origem.HoraInicio.ToString(@"hh\:mm")))
                 .ForMember(destino => destino.HoraTermino, opt => opt.MapFrom(origem => origem.HoraTermino.ToString(@"hh\:mm")))
-                .ForMember(destino => destino.ListaMedicos, opt => opt.Ignore())
+                .ForMember(destino => destino.Medicos, opt => opt.Ignore())
                 .AfterMap<FormsCirurgiaMappingAction>();
 
             CreateMap<Cirurgia, FormsCirurgiaViewModel>()
-                .ForMember(destino => destino.HoraInicio, opt => opt.MapFrom(origem => origem.HoraInicio.ToString(@"hh:mm")))
-                .ForMember(destino => destino.HoraTermino, opt => opt.MapFrom(origem => origem.HoraTermino.ToString(@"hh:mm")))
+                .ForMember(destino => destino.HoraInicio, opt => opt.MapFrom(origem => origem.HoraInicio.ToString(@"hh\:mm")))
+                .ForMember(destino => destino.HoraTermino, opt => opt.MapFrom(origem => origem.HoraTermino.ToString(@"hh\:mm")))
                 .ForMember(destino => destino.MedicosSelecionados, opt => opt.Ignore())
                 .AfterMap<FormsCirurgiaMappingActionInverso>();
         }
@@ -42,7 +42,7 @@ namespace AgendaMedica.WebApi.Config.AutoMapperProfiles
 
         public void Process(FormsCirurgiaViewModel viewModel, Cirurgia cirurgia, ResolutionContext context)
         {
-            cirurgia.ListaMedicos = repositorioMedico.SelecionarMuitos(viewModel.MedicosSelecionados);
+            cirurgia.Medicos = repositorioMedico.SelecionarMuitos(viewModel.MedicosSelecionados);
         }
     }
 
@@ -57,7 +57,7 @@ namespace AgendaMedica.WebApi.Config.AutoMapperProfiles
 
         public void Process(Cirurgia destination, FormsCirurgiaViewModel source, ResolutionContext context)
         {
-            source.MedicosSelecionados = repositorioMedico.SelecionarMuitos(destination.ListaMedicos);
+            source.MedicosSelecionados = repositorioMedico.SelecionarMuitos(destination.Medicos);
         }
     }
 }

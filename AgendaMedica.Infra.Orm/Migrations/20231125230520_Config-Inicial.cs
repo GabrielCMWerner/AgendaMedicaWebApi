@@ -17,6 +17,7 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
                     HoraInicio = table.Column<TimeSpan>(type: "time", nullable: false),
                     HoraTermino = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
@@ -46,6 +47,7 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     HoraInicio = table.Column<TimeSpan>(type: "time", nullable: false),
                     HoraTermino = table.Column<TimeSpan>(type: "time", nullable: false)
@@ -65,11 +67,11 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 columns: table => new
                 {
                     CirurgiasId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ListaMedicosId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    MedicosId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TBMedico_TBCirurgia", x => new { x.CirurgiasId, x.ListaMedicosId });
+                    table.PrimaryKey("PK_TBMedico_TBCirurgia", x => new { x.CirurgiasId, x.MedicosId });
                     table.ForeignKey(
                         name: "FK_TBMedico_TBCirurgia_TBCirurgia_CirurgiasId",
                         column: x => x.CirurgiasId,
@@ -77,8 +79,8 @@ namespace AgendaMedica.Infra.Orm.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TBMedico_TBCirurgia_TBMedico_ListaMedicosId",
-                        column: x => x.ListaMedicosId,
+                        name: "FK_TBMedico_TBCirurgia_TBMedico_MedicosId",
+                        column: x => x.MedicosId,
                         principalTable: "TBMedico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -90,9 +92,9 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 column: "MedicoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TBMedico_TBCirurgia_ListaMedicosId",
+                name: "IX_TBMedico_TBCirurgia_MedicosId",
                 table: "TBMedico_TBCirurgia",
-                column: "ListaMedicosId");
+                column: "MedicosId");
         }
 
         /// <inheritdoc />
