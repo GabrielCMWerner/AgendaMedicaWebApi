@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AgendaMedica.Infra.Orm.Migrations
 {
     /// <inheritdoc />
-    public partial class ConfigInicial : Migration
+    public partial class PostgreMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,11 +15,11 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 name: "TBCirurgia",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HoraInicio = table.Column<TimeSpan>(type: "time", nullable: false),
-                    HoraTermino = table.Column<TimeSpan>(type: "time", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Titulo = table.Column<string>(type: "text", nullable: false),
+                    Data = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    HoraInicio = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    HoraTermino = table.Column<TimeSpan>(type: "interval", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,11 +30,11 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 name: "TBMedico",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Crm = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Disponibilidade = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Crm = table.Column<string>(type: "text", nullable: false),
+                    Nome = table.Column<string>(type: "text", nullable: false),
+                    Telefone = table.Column<string>(type: "text", nullable: false),
+                    Disponibilidade = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -45,12 +45,12 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 name: "TBConsulta",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    HoraInicio = table.Column<TimeSpan>(type: "time", nullable: false),
-                    HoraTermino = table.Column<TimeSpan>(type: "time", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Titulo = table.Column<string>(type: "text", nullable: false),
+                    Data = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    HoraInicio = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    HoraTermino = table.Column<TimeSpan>(type: "interval", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,8 +66,8 @@ namespace AgendaMedica.Infra.Orm.Migrations
                 name: "TBMedico_TBCirurgia",
                 columns: table => new
                 {
-                    CirurgiasId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MedicosId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CirurgiasId = table.Column<Guid>(type: "uuid", nullable: false),
+                    MedicosId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
